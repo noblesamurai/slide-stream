@@ -20,16 +20,15 @@ SlideStream.prototype._transform = function (slide, enc, cb) {
   var self = this;
   var stack = this.middleware.slice();
 
-  function next(err, results) {
+  function next(err, handled) {
     if (err) return cb(err);
-    if (results) {
-      self.push(results);
+    if (handled) {
       return cb();
     }
     var plugin = stack.shift();
     if (typeof plugin !== 'undefined') {
       try {
-        plugin(slide, next);
+        plugin(slide, self, next);
       } catch (err) {
         // make sure we always return
         if (err) return cb(err);

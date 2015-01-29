@@ -5,7 +5,7 @@ var expect = require('expect.js'),
 
 // Simple Title Slide Middleware
 function titleSlide() {
-  return function (slide, cb) {
+  return function (slide, res, cb) {
     // if slide is not for me, then go to next middleware
     if (slide.type !== 'title') return cb();
 
@@ -13,18 +13,20 @@ function titleSlide() {
       '<h1>' + slide.title + '</h1>\n' +
       '<b>' + slide.body + '</b>\n' +
       '<hr>\n';
-    cb(null, html);
+    res.push(html);
+    cb(null, true);
   };
 }
 
 // Default Slide
 function defaultSlide() {
-  return function (slide, cb) {
+  return function (slide, res, cb) {
     // No check: always render
     var html =
       '<h2>' + slide.title + '</h2>\n' +
       '<b>' + slide.body + '</b>\n';
-    cb(null, html);
+    res.push(html);
+    cb(null, true);
   };
 }
 
